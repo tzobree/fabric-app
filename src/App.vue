@@ -25,6 +25,14 @@
             </select>
           </div>
         </div>
+        <div v-show="showEdit" class="info">
+          <ul>
+            <li>Font size: {{ fontSize }}</li>
+            <li>Line height: {{ lineHeight }}</li>
+            <li v-if="currentObjectScaleY">ScaleY: {{ currentObjectScaleY }}</li>
+            <li v-if="currentObjectScaleX">ScaleX: {{ currentObjectScaleX }}</li>
+          </ul>
+        </div>
       </div>
       <div class="preview">
         <h4>Preview</h4>
@@ -45,12 +53,13 @@ export default {
     return {
       canvasWidth: null,
       canvasHeight: null,
+      newText: '',
       showEdit: false,
       fontSize: 32,
       lineHeight: 1.16,
+      currentObjectScaleY: null,
+      currentObjectScaleX: null,
       fontFamily: 'Arial',
-      newText: '',
-      textObjectsCount: null,
       fonts: [
         'Arial',
         'Roboto',
@@ -72,6 +81,12 @@ export default {
     this.canvas = canvas
     this.canvas.setWidth(this.$refs.canCont.clientWidth)
     this.canvas.setHeight(this.$refs.canCont.clientHeight)
+
+    this.canvas.on('object:modified', (e) => {
+      console.log(e.target)
+      this.currentObjectScaleY = e.target.scaleY
+      this.currentObjectScaleX = e.target.scaleX
+    })
   },
   methods: {
     addText() {
@@ -118,10 +133,14 @@ export default {
         this.fontSize = current.fontSize
         this.lineHeight = current.lineHeight
         this.fontFamily = current.fontFamily
+        this.currentObjectScaleY = current.scaleY
+        this.currentObjectScaleX = current.scaleX
         this.showEdit = true
         this.canvas.renderAll()
       } else {
         this.showEdit = false
+        this.currentObjectScaleY = null
+        this.currentObjectScaleX = null
       }
     },
     setupDefaults() {
@@ -153,12 +172,14 @@ html, body {
   background: rgb(39,57,86);
   .fabric {
     width: 960px;
+    max-width: 100%;
     height: 600px;
     box-sizing: border-box;
     background: rgb(247,248,250);
     border-radius: 5px;
-    box-shadow: 0px 0px 2px 1px rgba(59, 47, 47, 0.1);
+    box-shadow: 0px 0px 3px 1px rgba(59, 47, 47, 0.1);
     padding: 15px 30px 30px;
+    margin: 10px;
     display: grid;
     grid-template-columns: 1fr 3fr;
     column-gap: 30px;
@@ -202,6 +223,14 @@ html, body {
           background: mediumaquamarine;
           color: #FFFFFF;
           cursor: pointer;
+        }
+      }
+      .info {
+        ul {
+          list-style: none;
+          padding: 0;
+          font-size: 0.75rem;
+          li {}
         }
       }
     }
