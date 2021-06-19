@@ -108,6 +108,7 @@ export default {
       if ( this.canvas.getActiveObject() !== undefined ) {
         let current = this.canvas.getActiveObject()
         current.set('fontSize', parseInt(this.fontSize))
+        current.set('height', parseInt(this.fontSize * this.lineHeight))
         this.canvas.renderAll()
       }
     },
