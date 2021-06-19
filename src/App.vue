@@ -64,7 +64,7 @@ export default {
         'Arial',
         'Roboto',
         'Fjalla One',
-        'Bungee',
+        'Staatliches',
         'Michroma',
         'Monoton',
         'Montserrat',
@@ -91,7 +91,7 @@ export default {
   methods: {
     addText() {
       if (this.newText !== '') {
-        var text = new fabric.Text(this.newText, { 
+        var text = new fabric.Textbox(this.newText, { 
           left: 10, 
           top: 10,
           fontSize: this.fontSize, 
